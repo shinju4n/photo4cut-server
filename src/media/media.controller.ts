@@ -30,6 +30,11 @@ export class MediaController {
     const command = new PutObjectCommand(uploadParams);
     await s3Client.send(command);
 
-    return `https://${process.env.AWS_BUCKET_NAME}.s3.${process.env.AWS_BUCKET_REGION}.amazonaws.com/origin/${fileName}`;
+    const result = {
+      mediaUri: `https://${process.env.AWS_BUCKET_NAME}.s3.${process.env.AWS_BUCKET_REGION}.amazonaws.com/origin/${fileName}`,
+      mediaType: file.mimetype.split('/')[0],
+    };
+
+    return result;
   }
 }
