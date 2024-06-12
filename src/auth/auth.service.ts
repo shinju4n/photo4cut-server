@@ -20,6 +20,7 @@ export class AuthService {
     private jwtService: JwtService,
     private configService: ConfigService,
   ) {}
+
   async signUp(authDto: AuthDto) {
     const { email, password } = authDto;
     const salt = await bcrypt.genSalt();
@@ -86,5 +87,12 @@ export class AuthService {
     await this.updateHashedRefreshToken(user.id, refreshToken);
 
     return { accessToken, refreshToken };
+  }
+
+  async getProfile(user: User) {
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const { password, hashedRefreshToken, ...rest } = user;
+
+    return { ...rest };
   }
 }
