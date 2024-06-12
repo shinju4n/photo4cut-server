@@ -1,5 +1,6 @@
 import {
   ConflictException,
+  ForbiddenException,
   Injectable,
   InternalServerErrorException,
   UnauthorizedException,
@@ -94,5 +95,18 @@ export class AuthService {
     const { password, hashedRefreshToken, ...rest } = user;
 
     return { ...rest };
+  }
+
+  async getRefreshToken(user: User) {
+    const { email } = user;
+    const { accessToken, refreshToken } = await this.getTokens({ email });
+
+    if (!user.hashedRefreshToken) {
+      throw new ForbiddenException('로그인이 필요합니다.');
+    }
+
+    await this.updateHashedRefreshToken(user.id, refreshToken);
+
+    return { accessToken, refreshToken };
   }
 }

@@ -31,4 +31,10 @@ export class AuthController {
   getProfile(@GetUser() user: User) {
     return this.authService.getProfile(user);
   }
+
+  @Get('/refresh')
+  @UseGuards(AuthGuard())
+  getRefreshToken(@GetUser() user: User) {
+    return this.authService.getRefreshToken(user);
+  }
 }
