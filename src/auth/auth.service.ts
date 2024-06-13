@@ -91,6 +91,12 @@ export class AuthService {
   }
 
   async getProfile(user: User) {
+    if (!user) {
+      throw new UnauthorizedException('인증되지 않은 사용자입니다.');
+    }
+    if (!user.hashedRefreshToken) {
+      throw new ForbiddenException('로그인이 필요합니다.');
+    }
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const { password, hashedRefreshToken, ...rest } = user;
 
@@ -108,5 +114,16 @@ export class AuthService {
     await this.updateHashedRefreshToken(user.id, refreshToken);
 
     return { accessToken, refreshToken };
+  }
+
+  async deleteRefreshToken(user: User) {
+    try {
+      await this.userRepository.update(user.id, { hashedRefreshToken: null });
+    } catch (error) {
+      console.log(error);
+      throw new InternalServerErrorException(
+        '로그아웃 도중 에러가 발생했습니다.',
+      );
+    }
   }
 }
