@@ -23,12 +23,13 @@ export class AuthService {
   ) {}
 
   async signUp(authDto: AuthDto) {
-    const { email, password } = authDto;
+    const { email, password, nickname } = authDto;
     const salt = await bcrypt.genSalt();
     const hashedPassword = await bcrypt.hash(password, salt);
 
     const user = this.userRepository.create({
       email,
+      nickname,
       password: hashedPassword,
       loginType: 'email',
     });
@@ -91,12 +92,6 @@ export class AuthService {
   }
 
   async getProfile(user: User) {
-    if (!user) {
-      throw new UnauthorizedException('인증되지 않은 사용자입니다.');
-    }
-    if (!user.hashedRefreshToken) {
-      throw new ForbiddenException('로그인이 필요합니다.');
-    }
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const { password, hashedRefreshToken, ...rest } = user;
 
