@@ -1,4 +1,5 @@
-import { Album } from 'src/album/album.entity';
+import { User } from 'src/auth/user.entity';
+import { Media } from 'src/media/media.entity';
 import {
   BaseEntity,
   Column,
@@ -6,17 +7,18 @@ import {
   DeleteDateColumn,
   Entity,
   ManyToOne,
+  OneToMany,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
 
 @Entity()
-export class Media extends BaseEntity {
+export class Album extends BaseEntity {
   @PrimaryGeneratedColumn()
   id: number;
 
   @Column()
-  uri: string;
+  title: string;
 
   @CreateDateColumn()
   createdAt: Date;
@@ -27,9 +29,9 @@ export class Media extends BaseEntity {
   @DeleteDateColumn()
   deletedAt: Date | null;
 
-  @Column()
-  mediaType: 'image' | 'video';
+  @ManyToOne(() => User, (user) => user.albums)
+  user: User;
 
-  @ManyToOne(() => Album, (album) => album.media)
-  album: Album;
+  @OneToMany(() => Media, (media) => media.album)
+  media: Media;
 }
