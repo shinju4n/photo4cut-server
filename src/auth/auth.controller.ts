@@ -41,7 +41,6 @@ export class AuthController {
   @Post('/logout')
   @UseGuards(AuthGuard())
   logout(@GetUser() user: User) {
-    console.log(user);
     return this.authService.deleteRefreshToken(user);
   }
 }

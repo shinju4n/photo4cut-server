@@ -33,5 +33,5 @@ export class Album extends BaseEntity {
   user: User;
 
   @OneToMany(() => Media, (media) => media.album)
-  media: Media;
+  media: Media[];
 }

@@ -31,5 +31,6 @@ export class Media extends BaseEntity {
   mediaType: 'image' | 'video';
 
   @ManyToOne(() => Album, (album) => album.media)
+  @Column({ name: 'albumId' })
   album: Album;
 }

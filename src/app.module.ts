@@ -3,6 +3,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { MediaModule } from './media/media.module';
 import { AuthModule } from './auth/auth.module';
+import { AlbumModule } from './album/album.module';
 
 @Module({
   imports: [
@@ -21,6 +22,7 @@ import { AuthModule } from './auth/auth.module';
     }),
     MediaModule,
     AuthModule,
+    AlbumModule,
   ],
   providers: [ConfigService],
 })

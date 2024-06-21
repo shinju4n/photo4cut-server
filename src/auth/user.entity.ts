@@ -48,5 +48,5 @@ export class User extends BaseEntity {
   hashedRefreshToken?: string;
 
   @OneToMany(() => Album, (album) => album.user)
-  albums: Album[];
+  albums: Album;
 }
