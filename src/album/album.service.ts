@@ -3,7 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { DataSource, Repository } from 'typeorm';
 import { Album } from './album.entity';
 import { Media } from 'src/media/media.entity';
-import { CreateAlbumDto } from './dto/album.dto';
+import { AlbumDTO, CreateAlbumDto } from './dto/album.dto';
 import { User } from 'src/auth/user.entity';
 
 @Injectable()
@@ -53,5 +53,24 @@ export class AlbumService {
     } finally {
       await queryRunner.release();
     }
+  }
+
+  async getAlbums(user: User) {
+    const albums = await this.albumRepository
+      .createQueryBuilder('album')
+      .leftJoinAndSelect('album.media', 'media')
+      .where('album.user = :user', { user: user.id })
+      .getMany();
+
+    return albums.map((album) => {
+      const albumDto = new AlbumDTO();
+      albumDto.id = album.id;
+      albumDto.title = album.title;
+      albumDto.media = {
+        mediaUri: album.media[0].uri,
+        mediaType: album.media[0].mediaType,
+      };
+      return albumDto;
+    });
   }
 }
