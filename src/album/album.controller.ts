@@ -1,4 +1,12 @@
-import { Body, Controller, Get, Post, UseGuards } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  Param,
+  ParseIntPipe,
+  Post,
+  UseGuards,
+} from '@nestjs/common';
 import { AlbumService } from './album.service';
 import { AuthGuard } from '@nestjs/passport';
 import { CreateAlbumDto } from './dto/album.dto';
@@ -18,5 +26,10 @@ export class AlbumController {
   @Get('/')
   getAlbums(@GetUser() user: User) {
     return this.albumService.getAlbums(user);
+  }
+
+  @Get('/:id')
+  getAlbumById(@Param('id', ParseIntPipe) id: number, @GetUser() user: User) {
+    return this.albumService.getAlbumById(id, user);
   }
 }

@@ -75,4 +75,28 @@ export class AlbumService {
       return albumDto;
     });
   }
+
+  async getAlbumById(id: number, user: User) {
+    const album = await this.albumRepository
+      .createQueryBuilder('album')
+      .leftJoinAndSelect('album.media', 'media')
+      .where('album.user = :user', { user: user.id })
+      .andWhere('album.id = :id', { id })
+      .getOne();
+
+    if (!album) {
+      throw new Error('해당 앨범을 찾을 수 없습니다.');
+    }
+
+    const albumDto = new AlbumDTO();
+    albumDto.id = album.id;
+    albumDto.title = album.title;
+    albumDto.media = {
+      mediaUri: album.media[0].uri,
+      mediaType: album.media[0].mediaType,
+    };
+    albumDto.createdAt = album.createdAt;
+
+    return albumDto;
+  }
 }
