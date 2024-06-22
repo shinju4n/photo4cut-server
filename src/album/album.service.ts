@@ -60,6 +60,7 @@ export class AlbumService {
       .createQueryBuilder('album')
       .leftJoinAndSelect('album.media', 'media')
       .where('album.user = :user', { user: user.id })
+      .orderBy('album.createdAt', 'DESC')
       .getMany();
 
     return albums.map((album) => {
@@ -70,6 +71,7 @@ export class AlbumService {
         mediaUri: album.media[0].uri,
         mediaType: album.media[0].mediaType,
       };
+      albumDto.createdAt = album.createdAt;
       return albumDto;
     });
   }
